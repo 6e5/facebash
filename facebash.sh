@@ -264,7 +264,7 @@ dat=$(($hourdate + 1))
 mindate=$(date +%M:%S)
 printf "\e[1;91m[*] Waiting 1 hour, to return at:\e[0m\e[1;93m %s:%s\n\e[0m" $dat $mindate
 let turn+=20
-sleep 3
+sleep 3600
 method2
 hourdate2=$(date +%H)
 dat2=$(($hourdate2 + 1))
