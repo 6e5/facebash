@@ -6,8 +6,7 @@ Facebook Brute Forcer in shellscript using TOR
 ```
 Facebook blocks account for 1 hour after 20 wrong passwords, so this script can perform only 20 pass/h.
 ```
-
-![facebash](https://user-images.githubusercontent.com/34893261/37884530-b4210ffc-3086-11e8-87e6-1895f9dc23be.png)
+![facebash](https://user-images.githubusercontent.com/34893261/37884926-d3f1df94-3088-11e8-98c3-1513f22e627c.png)
 
 ### Features
 - Save/Resume sessions
