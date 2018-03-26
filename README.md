@@ -20,7 +20,7 @@ Facebook blocks account for 1 hour after 20 wrong passwords, so this script can 
 ### Usage:
 
 ```
-git clone https://github.com/thelinuxchoice/instashell
+git clone https://github.com/thelinuxchoice/facebash
 cd instashell
 chmod +x facebash.sh
 service tor start
